@@ -14,6 +14,7 @@ import { BillingInterval } from './helpers/ensure-billing.js';
 import { AppInstallations } from './app_installations.js';
 
 import db_connection from './db.js';
+import tabRouter from './routes/tabsRoutes.js';
 
 const USE_ONLINE_TOKENS = false;
 
@@ -167,6 +168,8 @@ export async function createServer(
     app.use(compression());
     app.use(serveStatic(PROD_INDEX_PATH, { index: false }));
   }
+
+  app.use('/api', tabRouter);
 
   app.use('/*', async (req, res, next) => {
     if (typeof req.query.shop !== 'string') {
