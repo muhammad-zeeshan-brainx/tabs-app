@@ -68,13 +68,12 @@ const BILLING_SETTINGS = {
 setupGDPRWebHooks('/api/webhooks');
 
 // export for test use only
+export const app = express();
 export async function createServer(
   root = process.cwd(),
   isProd = process.env.NODE_ENV === 'production',
   billingSettings = BILLING_SETTINGS
 ) {
-  const app = express();
-
   app.set('use-online-tokens', USE_ONLINE_TOKENS);
   app.use(cookieParser(Shopify.Context.API_SECRET_KEY));
 
