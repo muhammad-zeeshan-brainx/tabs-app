@@ -13,6 +13,8 @@ import redirectToAuth from './helpers/redirect-to-auth.js';
 import { BillingInterval } from './helpers/ensure-billing.js';
 import { AppInstallations } from './app_installations.js';
 
+import db_connection from './db.js';
+
 const USE_ONLINE_TOKENS = false;
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
@@ -199,4 +201,11 @@ export async function createServer(
   return { app };
 }
 
-createServer().then(({ app }) => app.listen(PORT));
+db_connection()
+  .then((res) => {
+    console.log('db connected');
+    createServer().then(({ app }) => app.listen(PORT));
+  })
+  .catch((err) => {
+    console.log('could not connect to database', err);
+  });
