@@ -4,7 +4,6 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useAuthenticatedFetch } from '../hooks';
 import { useState } from 'react';
-import ToggleButton from 'react-toggle-button';
 export function TabsListing() {
   const fetch = useAuthenticatedFetch();
   const navigate = useNavigate();
@@ -42,6 +41,13 @@ export function TabsListing() {
     plural: 'customers',
   };
 
+  const deleteHandler = (event) => {
+    const id = event.target.closest('button').id;
+    fetch(`/api/tabs/${id}`, { method: 'DELETE' })
+      .then((response) => response.json())
+      .then((res) => console.log(res));
+  };
+
   const rowMarkup = tabs?.map(({ _id, title, assignedTo, enable }, index) => (
     <IndexTable.Row id={_id} key={_id} position={index}>
       <IndexTable.Cell>
@@ -49,8 +55,12 @@ export function TabsListing() {
       </IndexTable.Cell>
       <IndexTable.Cell>{assignedTo}</IndexTable.Cell>
       <IndexTable.Cell>
-        <Button primary>Edit</Button>
-        <Button destructive>Delete</Button>
+        <Button primary id={_id}>
+          Edit
+        </Button>
+        <Button destructive id={_id} onClick={deleteHandler}>
+          Delete
+        </Button>
       </IndexTable.Cell>
     </IndexTable.Row>
   ));

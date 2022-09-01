@@ -43,7 +43,27 @@ const createTab = async (shop, tabData) => {
   });
 };
 
+const deleteTab = async (shop, id) => {
+  return new Promise((resolve, reject) => {
+    MerchantModel.findOne({ shop: shop })
+      .then((merchant) => {
+        const tabIndex = merchant.tabs.findIndex(
+          (tab) => String(tab._id) === id
+        );
+        merchant.tabs.splice(tabIndex, 1);
+        merchant
+          .save()
+          .then((response) => resolve(response))
+          .catch((error) => reject(error, 'could not save tab to db'));
+      })
+      .catch((error) => {
+        reject(error, 'could not find merchant');
+      });
+  });
+};
+
 export default {
   getAllTabs,
   createTab,
+  deleteTab,
 };
