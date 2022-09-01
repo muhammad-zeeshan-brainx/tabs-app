@@ -1,4 +1,21 @@
 import MerchantModel from '../models/Merchant.js';
+
+const getAllTabs = async (shop) => {
+  return new Promise((resolve, reject) => {
+    MerchantModel.findOne({ shop: shop })
+      .then((merchant) => {
+        if (merchant) {
+          resolve(merchant.tabs);
+        } else {
+          throw new Error(`no tabs for shop ${shop}`);
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 const createTab = async (shop, tabData) => {
   return new Promise((resolve, reject) => {
     MerchantModel.findOne({
@@ -27,5 +44,6 @@ const createTab = async (shop, tabData) => {
 };
 
 export default {
+  getAllTabs,
   createTab,
 };

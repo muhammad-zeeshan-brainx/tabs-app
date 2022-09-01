@@ -21,6 +21,9 @@ const merchantSchema = mongoose.Schema({
         enum: ['All Products'],
         required: [true, 'Please select Assigned To'],
       },
+      enable: {
+        type: Boolean,
+      },
     },
   ],
 });
