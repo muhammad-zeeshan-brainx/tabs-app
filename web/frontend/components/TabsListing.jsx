@@ -1,4 +1,5 @@
-import { useNavigate } from '@shopify/app-bridge-react';
+// import { useNavigate } from '@shopify/app-bridge-react';
+import { useNavigate } from 'react-router-dom';
 import { IndexTable, TextStyle, Card, Button } from '@shopify/polaris';
 import React from 'react';
 import { useEffect } from 'react';
@@ -41,11 +42,26 @@ export function TabsListing() {
     plural: 'customers',
   };
 
-  const deleteHandler = (event) => {
+  const deleteHandler = async (event) => {
     const id = event.target.closest('button').id;
-    fetch(`/api/tabs/${id}`, { method: 'DELETE' })
-      .then((response) => response.json())
-      .then((res) => console.log(res));
+    try {
+      const response = await fetch(`/api/tabs/${id}`, { method: 'DELETE' });
+      console.log('delted successfully');
+    } catch (error) {
+      console.log('could not delete');
+    }
+  };
+
+  const editHandler = async (event) => {
+    const id = event.target.closest('button').id;
+
+    try {
+      const response = await fetch(`/api/tabs/${id}`);
+      const data = await response.json();
+      navigate('/tabs/new', { state: { data } });
+    } catch (error) {
+      console.log('could not find such tab', error);
+    }
   };
 
   const rowMarkup = tabs?.map(({ _id, title, assignedTo, enable }, index) => (
@@ -55,7 +71,7 @@ export function TabsListing() {
       </IndexTable.Cell>
       <IndexTable.Cell>{assignedTo}</IndexTable.Cell>
       <IndexTable.Cell>
-        <Button primary id={_id}>
+        <Button primary id={_id} onClick={editHandler}>
           Edit
         </Button>
         <Button destructive id={_id} onClick={deleteHandler}>

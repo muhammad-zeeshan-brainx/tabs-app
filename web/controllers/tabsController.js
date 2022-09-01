@@ -1,5 +1,6 @@
 import { app } from '../index.js';
 import { Shopify, LATEST_API_VERSION } from '@shopify/shopify-api';
+import MerchantModel from '../models/Merchant.js';
 
 import tabServices from '../services/tabServices.js';
 
@@ -41,12 +42,46 @@ const createTab = async (req, res) => {
   }
 };
 
-const getTab = (req, res) => {
-  res.status(200).send('done');
+const getTab = async (req, res) => {
+  const session = await Shopify.Utils.loadCurrentSession(
+    req,
+    res,
+    app.get('use-online-tokens')
+  );
+  const id = req.params.id;
+  try {
+    const merchant = await MerchantModel.findOne({
+      shop: session?.shop,
+    }).exec();
+    const tab = merchant.tabs.find((tab) => String(tab._id) === id);
+    res.status(200).json({ status: 'success', tab });
+  } catch (error) {
+    res
+      .status(200)
+      .json({ status: 'Fail', message: 'could not find tab', error });
+  }
 };
 
-const editTab = (req, res) => {
-  res.status(200).send('done');
+const editTab = async (req, res) => {
+  const session = await Shopify.Utils.loadCurrentSession(
+    req,
+    res,
+    app.get('use-online-tokens')
+  );
+  const shop = session?.shop;
+  const id = req.params.id;
+  const data = req.body;
+
+  try {
+    const response = await tabServices.editTab(shop, id, data);
+    res.status(200).send({
+      status: 'success',
+      message: `updated successfully`,
+      tab: response,
+    });
+  } catch (error) {
+    res.status(500).send('error occured, something went wrong');
+  }
 };
 
 const deleteTab = async (req, res) => {

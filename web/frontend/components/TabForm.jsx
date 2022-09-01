@@ -13,12 +13,12 @@ import { useState, useCallback } from 'react';
 
 import { useAuthenticatedFetch } from '../hooks';
 
-export function TabForm() {
+export function TabForm(props) {
   const fetch = useAuthenticatedFetch();
 
-  const [title, setTitle] = useState('');
-  const [label, setLabel] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState(props?.tab?.title || '');
+  const [label, setLabel] = useState(props?.tab?.label || '');
+  const [description, setDescription] = useState(props?.tab?.description || '');
 
   const [assignedTo, setAssignedTo] = useState('All Products');
 
@@ -32,12 +32,12 @@ export function TabForm() {
     };
 
     const requestOptions = {
-      method: 'POST',
+      method: `${props.tab ? 'PATCH' : 'POST'}`,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
     };
-
-    const response = await fetch('/api/tabs/new', requestOptions);
+    const url = props.tab ? `/api/tabs/${props.tab._id}` : '/api/tabs/new';
+    const response = await fetch(url, requestOptions);
 
     setTitle('');
     setLabel('');
