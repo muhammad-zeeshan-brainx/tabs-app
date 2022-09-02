@@ -8,5 +8,6 @@ router.post('/tabs/new', tabsController.createTab);
 router.get('/tabs/:id', tabsController.getTab);
 router.patch('/tabs/:id', tabsController.editTab);
 router.delete('/tabs/:id', tabsController.deleteTab);
+router.patch('/tabs/:id/changeVisbility', tabsController.changeTabVisibility);
 
 export default router;

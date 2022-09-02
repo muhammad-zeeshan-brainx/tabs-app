@@ -31,6 +31,7 @@ const createTab = async (req, res) => {
   );
 
   try {
+    req.body.enable = true;
     const tab = await tabServices.createTab(session?.shop, req.body);
     res.status(200).send({
       status: 'success',
@@ -80,6 +81,7 @@ const editTab = async (req, res) => {
       tab: response,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).send('error occured, something went wrong');
   }
 };
@@ -103,10 +105,33 @@ const deleteTab = async (req, res) => {
   }
 };
 
+const changeTabVisibility = async (req, res) => {
+  const session = await Shopify.Utils.loadCurrentSession(
+    req,
+    res,
+    app.get('use-online-tokens')
+  );
+  const shop = session?.shop;
+  const id = req.params.id;
+
+  try {
+    const response = await tabServices.changeTabVisibility(shop, id);
+    res.status(200).send({
+      status: 'success',
+      message: `updated successfully`,
+      tab: response,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('error occured, something went wrong');
+  }
+};
+
 export default {
   getAllTabs,
   createTab,
   getTab,
   editTab,
   deleteTab,
+  changeTabVisibility,
 };

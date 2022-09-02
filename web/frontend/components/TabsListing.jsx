@@ -1,17 +1,19 @@
-// import { useNavigate } from '@shopify/app-bridge-react';
 import { useNavigate } from 'react-router-dom';
 import { IndexTable, TextStyle, Card, Button } from '@shopify/polaris';
+
 import React from 'react';
 import { useEffect } from 'react';
 import { useAuthenticatedFetch } from '../hooks';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import Switch from '@mui/material/Switch';
+
+import { check } from 'prettier';
+
 export function TabsListing() {
   const fetch = useAuthenticatedFetch();
   const navigate = useNavigate();
   const [tabs, setTabs] = useState([]);
   const [isTabsChange, setIsTabsChange] = useState(false);
-
-  const [toggleBtn, setToggleBtn] = useState(false);
 
   useEffect(async () => {
     const response = await fetch('/api/tabs');
@@ -64,8 +66,21 @@ export function TabsListing() {
     }
   };
 
+  const toggleSwitchHandler = async (event) => {
+    const id = event.target.closest('input').id;
+    const requestOptions = {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+    };
+    const url = `/api/tabs/${id}/changeVisbility`;
+    const response = await fetch(url, requestOptions);
+    setIsTabsChange((prev) => !prev);
+  };
   const rowMarkup = tabs?.map(({ _id, title, assignedTo, enable }, index) => (
     <IndexTable.Row id={_id} key={_id} position={index}>
+      <IndexTable.Cell>
+        <Switch checked={enable} onChange={toggleSwitchHandler} id={_id} />
+      </IndexTable.Cell>
       <IndexTable.Cell>
         <TextStyle variation='strong'>{title}</TextStyle>
       </IndexTable.Cell>

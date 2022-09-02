@@ -50,7 +50,7 @@ const editTab = async (shop, id, data) => {
         const tabIndex = merchant.tabs.findIndex(
           (tab) => String(tab._id) === id
         );
-        merchant.tabs[tabIndex] = data;
+        merchant.tabs[tabIndex].enable = data;
         merchant
           .save()
           .then((response) => resolve(response))
@@ -81,9 +81,29 @@ const deleteTab = async (shop, id) => {
   });
 };
 
+const changeTabVisibility = async (shop, id) => {
+  return new Promise((resolve, reject) => {
+    MerchantModel.findOne({ shop: shop })
+      .then((merchant) => {
+        const tabIndex = merchant.tabs.findIndex(
+          (tab) => String(tab._id) === id
+        );
+        merchant.tabs[tabIndex].enable = !merchant.tabs[tabIndex].enable;
+        merchant
+          .save()
+          .then((response) => resolve(response))
+          .catch((error) => reject(error, 'could not update tab to db'));
+      })
+      .catch((error) => {
+        reject(error, 'could not find merchant');
+      });
+  });
+};
+
 export default {
   getAllTabs,
   createTab,
   editTab,
   deleteTab,
+  changeTabVisibility,
 };
