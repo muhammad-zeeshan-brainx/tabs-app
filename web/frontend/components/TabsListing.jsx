@@ -21,27 +21,9 @@ export function TabsListing() {
     setTabs([...data.tabs]);
   }, [isTabsChange]);
 
-  const customers = [
-    {
-      id: '3411',
-      url: 'customers/341',
-      name: 'Mae Jemison',
-      location: 'Decatur, USA',
-      orders: 20,
-      amountSpent: '$2,400',
-    },
-    {
-      id: '2561',
-      url: 'customers/256',
-      name: 'Ellen Ochoa',
-      location: 'Los Angeles, USA',
-      orders: 30,
-      amountSpent: '$140',
-    },
-  ];
   const resourceName = {
-    singular: 'customer',
-    plural: 'customers',
+    singular: 'tab',
+    plural: 'tabs',
   };
 
   const deleteHandler = async (event) => {
@@ -108,7 +90,7 @@ export function TabsListing() {
     <Card sectioned>
       <IndexTable
         resourceName={resourceName}
-        itemCount={customers.length}
+        itemCount={tabs.length}
         headings={[{ title: '' }, { title: 'Tab' }, { title: 'Assigned To' }]}
         selectable={false}
       >

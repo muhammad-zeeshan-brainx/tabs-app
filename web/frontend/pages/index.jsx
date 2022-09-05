@@ -26,7 +26,6 @@ export default function HomePage() {
         Static tabs are useful for some content that is the same for all products, like Shipping terms, Reviews tab and so on.'
       >
         <TabsListing />
-        {/* <ProductsCard></ProductsCard> */}
       </Layout.AnnotatedSection>
     </Page>
   );
