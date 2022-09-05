@@ -50,7 +50,8 @@ const editTab = async (shop, id, data) => {
         const tabIndex = merchant.tabs.findIndex(
           (tab) => String(tab._id) === id
         );
-        merchant.tabs[tabIndex].enable = data;
+
+        merchant.tabs[tabIndex] = data;
         merchant
           .save()
           .then((response) => resolve(response))

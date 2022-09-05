@@ -109,7 +109,7 @@ export function TabsListing() {
       <IndexTable
         resourceName={resourceName}
         itemCount={customers.length}
-        headings={[{ title: 'Tab' }, { title: 'Assigned To' }, { title: '' }]}
+        headings={[{ title: '' }, { title: 'Tab' }, { title: 'Assigned To' }]}
         selectable={false}
       >
         {rowMarkup}
