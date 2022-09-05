@@ -1,4 +1,6 @@
 // @ts-check
+import 'dotenv/config';
+
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import express from 'express';
@@ -24,8 +26,6 @@ const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 
-const DB_PATH = `mongodb://localhost:27017`;
-
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
@@ -36,7 +36,7 @@ Shopify.Context.initialize({
   IS_EMBEDDED_APP: true,
   // This should be replaced with your preferred storage strategy
   SESSION_STORAGE: new Shopify.Session.MongoDBSessionStorage(
-    DB_PATH,
+    process.env.DB_PATH,
     'tabs_db'
   ),
 });
