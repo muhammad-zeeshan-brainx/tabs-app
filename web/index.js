@@ -16,6 +16,7 @@ import { BillingInterval } from './helpers/ensure-billing.js';
 import { AppInstallations } from './app_installations.js';
 
 import db_connection from './db.js';
+import tabRouter from './routes/tabsRoutes.js';
 
 const USE_ONLINE_TOKENS = false;
 
@@ -67,13 +68,12 @@ const BILLING_SETTINGS = {
 setupGDPRWebHooks('/api/webhooks');
 
 // export for test use only
+export const app = express();
 export async function createServer(
   root = process.cwd(),
   isProd = process.env.NODE_ENV === 'production',
   billingSettings = BILLING_SETTINGS
 ) {
-  const app = express();
-
   app.set('use-online-tokens', USE_ONLINE_TOKENS);
   app.use(cookieParser(Shopify.Context.API_SECRET_KEY));
 
@@ -167,6 +167,8 @@ export async function createServer(
     app.use(compression());
     app.use(serveStatic(PROD_INDEX_PATH, { index: false }));
   }
+
+  app.use('/api', tabRouter);
 
   app.use('/*', async (req, res, next) => {
     if (typeof req.query.shop !== 'string') {
